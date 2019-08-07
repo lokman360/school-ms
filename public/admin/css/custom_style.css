@@ -1,0 +1,38 @@
+/*------- Start Scrollbar style ------*/
+/* width */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888; 
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: red; 
+}
+/*------- End Scrollbar style ------*/
+
+
+
+#con-navbar-left-area{
+	width:15%;
+	position: fixed;
+	top:0;
+	left:0;
+	bottom: 0;
+}
+
+#main-container-area{
+	width:85%;
+	margin-left:15%;
+}

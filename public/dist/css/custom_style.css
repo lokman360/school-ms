@@ -1,0 +1,304 @@
+/*------- Start Scrollbar style ------*/
+/* width */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #FFF;
+
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #00c0ef; 
+  border-radius: 0px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #3c8dbc; 
+}
+/*------- End Scrollbar style ------*/
+/*------- Start Nav Tab style ------*/
+
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+    color: #00c0ef;
+    cursor: default;
+    background-color: #fff;
+    border: 1px solid #00c0ef;
+    border-bottom-color: transparent;
+}
+.nav-tabs > li > a {
+    color:#555;
+}
+.nav-tabs > li > a:hover {
+    background: #00c0ef;
+    color:#FFF;
+    border-bottom:1px solid #00c0ef;
+}
+.nav-tabs {
+    border-bottom: 1px solid #00c0ef;
+}
+/*------- End Scrollbar style ------*/
+
+
+
+
+.btn-theme-color{
+    background: #00c0ef;
+    color:#fff;
+    font-weight:bold;
+}
+.btn-style{
+    margin-top:10px;
+    margin-bottom:10px;
+}
+.btn-theme-color:hover{
+    background: #05a9d2;
+    color:#fff;
+}
+.box-padding{
+    padding:10px;
+    box-sizing:border-box;
+}
+.box-header-title h3 {
+    margin: 0px;
+    padding: 2px;
+}
+.box-title-center {
+    background: #00c0ef;
+    margin-top: -15px;
+    border-radius: 0px 0px 5px 5px;
+    color: #fff;
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+    overflow: hidden;
+    position: relative;
+}
+.error-messages-area{
+    color:#a94442;
+    background-color: #ff9e9e;
+}
+.success-messages-area{
+    color:#3c763d;
+    background-color: #bbeaa7;
+}
+.error-messages-area,
+.success-messages-area{
+    position: absolute;
+    left: 0;
+    top:-40px;
+    height: 100%;
+    width:100%;
+    text-align:center;
+    font-size:20px;
+    -webkit-animation: mymove 5s infinite; /* Safari 4.0 - 8.0 */
+    animation: mymove 5s ;
+}
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes mymove {
+  0%   {top:   -40px;}
+  10%  {top:   0px;}
+  90%  {top:   0px;}
+  100%  {top: -40px;}
+}
+
+/* Standard syntax */
+@keyframes mymove {
+  0%   {top:   -40px;}
+  10%  {top:   0px;}
+  90%  {top:   0px;}
+  100%  {top: -40px;}
+}
+.content-header {
+    position: relative;
+    padding: 0px 15px 0 15px;
+}
+.content {
+    margin-top: -15px;
+}
+.content-header>h1 {
+    margin: 0;
+    font-size: 15px;
+}
+
+.skin-blue .main-header .logo,
+.skin-blue .main-header .navbar{
+    background-color: #00c0ef;
+}
+
+/* ///////     input style    /////////*/
+.form-control:focus {
+    border-color: #00c0ef;
+    box-shadow: none;
+}
+.form-control {
+    border-radius: 3px;
+}
+
+
+/* ///////// SideBar  Style ///////////*/
+.user-panel>.image>img {
+    border: 2px solid #00c0ef;
+}
+.skin-blue .user-panel>.info, .skin-blue .user-panel>.info>a {
+    color: #00c0ef;
+}
+.skin-blue .wrapper, .skin-blue .main-sidebar, .skin-blue .left-side {
+    background-color: #fff;
+}
+.skin-blue .sidebar a {
+    color: #444; !important
+}
+.skin-blue .sidebar-form input[type="text"], .skin-blue .sidebar-form .btn {
+    background-color: #00c0ef;
+    color:#fff;
+    border:1px solid transparent;
+    hight:20px;
+
+}
+.skin-blue .sidebar-menu>li.header {
+    color: #fff;
+    background: #00c0ef;
+    font-weight:bold;
+    font-size:14px;
+}
+.skin-blue .sidebar-menu>li:hover>a, .skin-blue .sidebar-menu>li.active>a, .skin-blue .sidebar-menu>li.menu-open>a {
+    color: #fff;
+    background: #00c0ef;
+}
+
+.skin-blue .sidebar-form {
+    border: 1px solid #00c0ef;
+}
+
+.sidebar-form input:focus {
+    border-color: none;
+}
+.skin-blue .sidebar-menu>li>.treeview-menu {
+    margin: 0 1px;
+    background: #ecf0f5;
+    padding-left: 0px;
+    margin:0px;
+    margin-right:1px;
+}
+
+.skin-blue .sidebar-menu .treeview-menu>li>a {
+    color: #555;
+    border-left: 5px solid transparent;
+}
+.skin-blue .sidebar-menu .treeview-menu>li>:hover {
+    color: #444;
+    border-left: 5px solid #00c0ef;
+}
+
+.skin-blue .sidebar-menu .treeview-menu>li.active>a, .skin-blue .sidebar-menu .treeview-menu>li>a:hover {
+    color: #333;
+}
+.skin-blue .sidebar-menu .treeview-menu>li.active>a, .skin-blue .sidebar-menu .treeview-menu>li>a:hover i{
+    color: #00c0ef;
+}
+
+/* ///////// Content-Body Style ///////////*/
+.bg-index-box {
+    background-color: #ffffff;
+}
+.small-box {
+    border-left: 5px solid #00c0ef;
+    color:#00c0ef;
+    transition:.3s all;
+}
+.small-box:hover{
+    box-shadow: 0 5px 5px rgba(0,0,0,0.1);
+    color:#00c0ef;
+    cursor: pointer;
+    border-left: 10px solid #00c0ef;
+}
+.small-box p {
+    font-size: 18px;
+}
+.small-box .icon {
+    -webkit-transition: all .3s linear;
+    -o-transition: all .3s linear;
+    transition: all .3s linear;
+    position: absolute;
+    top: -10px;
+    right: 10px;
+    z-index: 0;
+    font-size: 95px;
+    color: #00c0ef;
+}
+
+.box-left-border{
+    border-left:5px solid #00c0ef;
+}
+.box-top-border{
+    border-top:5px solid #00c0ef;
+}
+
+
+/* ////// Chart area style ////////*/
+.rounded-icon{
+    animation: fa-spin 2s infinite linear
+}
+.bg-teal-gradient {
+    background: #39cccc !important;
+    background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #0097ef), color-stop(1, #00c0ef)) !important;
+    background: -ms-linear-gradient(bottom, #0097ef, #00c0ef) !important;
+    background: -moz-linear-gradient(center bottom, #0097ef 0, #00c0ef 100%) !important;
+    background: -o-linear-gradient(#0097ef, #00c0ef) !important;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#7adddd', endColorstr='#39cccc', GradientType=0) !important;
+    color: #fff;
+}
+
+
+.main-content-body {
+    min-height: 500px;
+}
+
+/*//////////    Add student Page //////////*/
+
+.add_photo_view{
+    height:150px;
+    width:148px;
+    border:2px solid #eee;
+    margin-bottom:10px;
+}
+input[type="file"]{
+    display:none;
+}
+.file_label{
+    background: #00c0ef;
+    padding: 5px 35px;
+    color: #fff;
+    border-radius: 50px;
+}
+.btn.focus, .btn:focus, .btn:hover {
+    color: #fff;
+    text-decoration: none;
+}
+
+.img-view{
+    height:100%;
+    width:100%;
+}
+.delete-form{
+    display:inline;
+}
+
+
+/* signle view area */
+
+.st-single-view-photo{
+    height:180px;
+    width:170px;
+}
+.st-single-view-photo img{
+    height:100%;
+    width:100%;
+}
+.st-bio-top-table{
+    font-size: 18px;
+}
