@@ -25,22 +25,6 @@
                                 <div class="col-md-3"></div>
                                 <div class="col-md-6">
                                     <div class="box-title-center">
-                                         @if($errors->any())
-                                           <div class="error-messages-area">
-                                              @foreach($errors->all() as $error)
-                                                <i class="fa fa-exclamation-triangle"></i> {{$error}} @break
-                                              @endforeach
-                                            </div>
-                                          @endif
-                                          @if(session()->has('successMsg'))
-                                            <div class="success-messages-area">
-                                              {{session()->get('successMsg')}}
-                                            </div>
-                                          @elseif(session()->has('errorMsg'))
-                                            <div class="error-messages-area">
-                                              {{session()->get('errorMsg')}}
-                                            </div>
-                                          @endif
                                         <h3 class="text-center"><i class="fa fa-user-circle"></i> Create New Students</h3>
                                     </div>
                                 </div>
@@ -51,12 +35,12 @@
                                 <div class="col-md-12">
                                     <div class="st-create-area">
                                         <!-- Button trigger modal -->
-                                          <button type="button" class="btn btn-theme-color" data-toggle="modal" data-target="#exampleModal">
+                                          <button type="button" class="btn btn-theme-color" data-toggle="modal" data-target="#addClassModal">
                                             Add New Class
                                           </button>
 
                                           <!-- Modal -->
-                                          <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                          <div class="modal fade" id="addClassModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                             <div class="modal-dialog" role="document">
                                               <div class="modal-content">
                                                 <div class="modal-header">
@@ -67,14 +51,13 @@
                                                 </div>
                                                 <div class="modal-body">
                                                   <div class="container-fluid">
-                                                      {{Form::open(['url'=>URL::to('')])}}
-                                                      {{Form::text('st_class',old('st_class'),['class'=>'form-control', 'placeholder'=>'Enter Class Name'])}}
-
+                                                    {{Form::open(['id'=>'addClasFrom'])}}
+                                                      {{Form::text('class_name',old('class_name'),['id'=>'class_name','class'=>'form-control', 'placeholder'=>'Enter Class Name'])}}
                                                   </div>
                                                 </div>
                                                 <div class="modal-footer">
                                                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                      {{Form::submit('Save Changes',['class'=>'btn btn-theme-color'])}}
+                                                      {{Form::submit('Save Changes',['id'=>'addclassSubmit','class'=>'btn btn-theme-color'])}}
                                                     {{Form::close()}}
                                                 </div>
                                               </div>
@@ -83,29 +66,51 @@
                                     </div>
                                 </div>
                                 <div class="col-md-12">
-                                    <table class="table table-responsive table-hover">
+                                    <table class="table table-responsive">
                                         <thead>
                                             <tr>
                                                 <th>SL</th>
                                                 <th>CLASS</th>
                                                 <th>CLASS ID</th>
-                                                <th>ACTION</th>
+                                                <th class="col-md-2">ACTION</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                           @if($lastClasses)
                                             @foreach($lastClasses as $lastClass)
-                                              <tr>
+                                              <tr id="btn-display">
                                                   <td>{{$loop->iteration}}</td>
                                                   <td>{{$lastClass->class_name}}</td>
                                                   <td>{{$lastClass->id}}</td>
-                                                  <td><button class="btn btn-xs btn-info" ><i class="fa fa-eye"></i></button> | <a class="btn btn-xs btn-info" href="{{URL::to('student/'.$lastClass->id.'/edit')}}"><i class="fa fa-edit"></i></a> | 
-                                                    {{Form::open(['url'=>URL::to('student',$lastClass->id),'class'=>'delete-form'])}}
-                                                      {{method_field('DELETE')}}
-                                                      <button class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></button>
-                                                    {{Form::close()}}  
+                                                  <td><a class="class-edit-btn btn btn-xs btn-info" id="{{$lastClass->id}}" ><i class="fa fa-edit"></i></a>  
+                                                    <button id="{{$lastClass->id}}" class="class-delete-btn btn btn-xs btn-danger" data="{{$lastClass->class_name}}"><i class="fa fa-trash"></i></button>
                                                   </td>
                                               </tr>
+
+                                              <div class="modal fade" id="{{'addClassModal'.$lastClass->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                  <div class="modal-content">
+                                                    <div class="modal-header">
+                                                      <span class="modal-title" id="exampleModalLabel">Update Class</span>
+                                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                      </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                      <div class="container-fluid">
+                                                        {{Form::open(['id'=>'addClassFrom'.$lastClass->id])}}
+                                                          {{Form::text('class_name',$lastClass->class_name,['id'=>'class_name','class'=>'form-control', 'placeholder'=>'Enter Class Name'])}}
+                                                          <input type="hidden" value="{{$lastClass->id}}" name="class_id" id="class_id">
+                                                      </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                          {{Form::submit('Update Changes',['id'=>'updateclassSubmit','class'=>'btn btn-theme-color'])}}
+                                                        {{Form::close()}}
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </div>
                                             @endforeach
                                           @endif
                                         </tbody>

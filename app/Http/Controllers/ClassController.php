@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\StClass;
+use App\StudentClass;
 use Illuminate\Http\Request;
+use Validator;
+use App\Student;
+use App\Section;
 
 
 class ClassController extends Controller
@@ -15,6 +18,7 @@ class ClassController extends Controller
      */
     public function index()
     {
+        return view('admin.pages.class_page.classes');
        
     }
 
@@ -25,7 +29,7 @@ class ClassController extends Controller
      */
     public function create()
     {
-        $lastClasses = Stclass::OrderBy('id')->take(10)->get();
+        $lastClasses = StudentClass::OrderBy('id', 'DESC')->take(10)->get();
         return view('admin.pages.class_page.addClassList',compact('lastClasses'));
     }
 
@@ -36,8 +40,25 @@ class ClassController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        //
+    {   
+        $request->validate([
+            'class_name'=>'required'
+        ]);
+
+        $checkDouble = StudentClass::where('class_name',$request->class_name)
+                ->get();
+        if(count($checkDouble) < 1){
+            $is_save = StudentClass::create($request->all());
+            if($is_save){
+                return response()->json(['error'=>false,'iconMsg'=>'success','headingMsg'=>'Thank You!','successMsg'=>'Data Insert Successfully']);
+            }
+            else{
+                return response()->json(['error'=>true,'iconMsg'=>'error','headingMsg'=>'Opps!','errorMsg'=>'Data Can\'t insert']);
+            }
+        }
+        else{
+            return response()->json(['error'=>true,'iconMsg'=>'error','headingMsg'=>'Opps!','errorMsg'=>'Data is already exist']);
+        }
     }
 
     /**
@@ -47,8 +68,10 @@ class ClassController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
-    {
-        //
+    {   
+        $allClasses = StudentClass::OrderBy('id', 'DESC')->get();
+        return view('admin.pages.class_page.viewClassList',compact('allClasses'));
+        
     }
 
     /**
@@ -69,9 +92,34 @@ class ClassController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
-        //
+    public function update(Request $request)
+    {   
+        $request->validate([
+            'class_name'=>'required'
+        ]);
+        $id = $request->class_id;
+
+        $checkDouble = StudentClass::where('class_name',$request->class_name)
+                ->get();
+        if(count($checkDouble) < 1){
+
+            $updateData = StudentClass::find($id);
+            $is_update = $updateData->update($request->all());
+
+
+            if($is_update){
+                return response()->json(['error'=>false,'iconMsg'=>'success','headingMsg'=>'Thank You!','successMsg'=>'Data Update Successfully']);
+            }
+            else{
+                return response()->json(['error'=>true,'iconMsg'=>'error','headingMsg'=>'Opps!','errorMsg'=>'Data Can\'t insert']);
+            }
+        }
+        else{
+            return response()->json(['error'=>true,'iconMsg'=>'error','headingMsg'=>'Opps!','errorMsg'=>'Data is already exist']);
+        }
+
+
+
     }
 
     /**
@@ -81,7 +129,39 @@ class ClassController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
-    {
-        //
+    {   
+        if($id != null){
+
+            $section = Section::where('section_class', $id)->get();
+            $student = Student::where('st_class',$id)->get();
+            $student = count($student);
+            $section = count($section);
+
+            if($student > 0){
+                return response()->json(['error'=>true,'iconMsg'=>'error','errorMsg'=>'Class have Students']);
+            }
+            else if($section > 0){
+                return response()->json(['error'=>true,'iconMsg'=>'error','errorMsg'=>'Class have Section']);
+            }
+            else{
+                $is_delete = StudentClass::where('id',$id)->delete();
+                if($is_delete){
+                    return response()->json(['error'=>false,'iconMsg'=>'success','successMsg'=>'Data Delete Successfully']);
+                }
+            }
+
+        }
     }
+
+
+
+
+
+
+
+
+
+
+
+
 }

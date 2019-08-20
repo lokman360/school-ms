@@ -6,7 +6,8 @@ use Session;
 use Illuminate\Http\Request;
 use App\Student;
 use Validator;
-
+use App\StudentClass;
+use App\Section;
 class StudentController extends Controller
 {
     /**
@@ -16,7 +17,9 @@ class StudentController extends Controller
      */
     public function index()
     {
-        return view('admin.pages.student_page.student');
+        // $section = Section::first();
+        // dd($section->SectionClass->class_name);
+         return view('admin.pages.student_page.student');
     }
 
     /**
@@ -26,8 +29,9 @@ class StudentController extends Controller
      */
     public function create()
     {
+        $classItems = StudentClass::pluck('class_name','id');
         $lastStudents = Student::orderBy('id','desc')->take(20)->get();
-        return view('admin.pages.student_page.addStudentsList', compact('lastStudents'));
+        return view('admin.pages.student_page.addStudentsList', compact('lastStudents','classItems'));
     }
 
     /**
@@ -38,7 +42,7 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        if($request->hasFile('st_photo')){
+        if($request->file('st_photo')){
             $file = $request->st_photo;
             $file->getClientOriginalName();
             $setNumber = rand(9999, 99999999).time();
@@ -54,24 +58,14 @@ class StudentController extends Controller
         
         $request->validate([
                 'st_name'=>'required',
-                'st_f_name'=>'required',
-                'st_phone'=>'required|max:11',
-                'st_present_add'=>'required',
-                'st_religion'=>'required',
                 'st_class'=>'required',
                 'st_session'=>'required',
-                'st_roll_no'=>'required',
-            ],
+                'st_roll_no'=>'required',            ],
             [
-                'st_name.required'=>'The Name filed is required',
-                'st_f_name.required'=>'The Father Name filed is required',
-                'st_phone.required'=>'The Phone filed is required',
-                'st_phone.max'=>'The Phone must be 11 digit',
-                'st_present_add.required'=>'The Pressent Address filed is required',
-                'st_religion.required'=>'The Religion filed is required',
-                'st_class.required'=>'The Class filed is required',
-                'st_roll_no.required'=>'The Roll filed is required',
-                'st_session.required'=>'The Session filed is required',
+                'st_name.required'=>'The student name is required',
+                'st_class.required'=>'The student class is required',
+                'st_roll_no.required'=>'The student roll is required',
+                'st_session.required'=>'The student session is required',
             ]
         );
 
@@ -81,24 +75,23 @@ class StudentController extends Controller
             $formData = array_merge($formData,$photo_array);
         }
 
-        // Start Check Double Entry ///
-        $st_class = $request->st_class;
-        $st_roll_no = $request->st_roll_no;
-        $st_session = $request->st_session;
-        $st_section = $request->st_section;
-        $checkDouble = Student::all()->where('st_class',$st_class)->where('st_roll_no',$st_roll_no)->where('st_session',$st_session)->where('st_section',$st_section);
-        // End Check Double Entry ///
+        $checkDouble = Student::where('st_class',$request->st_class)
+                ->where('st_roll_no',$request->st_roll_no)
+                ->where('st_section',$request->st_section)
+                ->where('st_session',$request->st_session)
+                ->get();
 
         if(count($checkDouble) < 1){
             $is_store = Student::create($formData);
             if($is_store){
-                session()->flash('successMsg','Student Insert Successfully');
-                return redirect('student/create');
+                return response()->json(['error'=>false,'iconMsg'=>'success','headingMsg'=>'Thank You!','successMsg'=>'Data Insert Successfully']);
+            }
+            else{
+                return response()->json(['error'=>true,'iconMsg'=>'error','headingMsg'=>'Opps!','errorMsg'=>'Data Can\'t insert']);
             }
         }
         else{
-            session()->flash('errorMsg','Student already Stored');
-            return redirect('student/create');
+            return response()->json(['error'=>true,'iconMsg'=>'error','headingMsg'=>'Opps!','errorMsg'=>'Data is already exist']);
         }
         
     }
@@ -110,8 +103,22 @@ class StudentController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
-    {
-        
+    {   
+        $classItems = StudentClass::pluck('class_name','id');
+        $sectionItems = Section::pluck('section_name','id');
+        return view('admin.pages.student_page.viewStudents', compact('classItems','sectionItems'));
+    }
+
+    public function classWiseView(Request $request){
+
+        if($request->st_section != null){
+            $classWiseSts = Student::where('st_class', $request->st_class)->where('st_section',$request->st_section)->where('st_session', $request->st_session)->get();
+        }
+        else{
+            $classWiseSts = Student::where('st_class', $request->st_class)->where('st_session', $request->st_session)->get();
+        }
+        $classItems = StudentClass::pluck('class_name','id');
+        return view('admin.pages.student_page.viewStudentsClassWise', compact('classWiseSts','classItems','request'));
     }
 
     /**
@@ -133,10 +140,25 @@ class StudentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
-        
-        if($request->hasFile('st_photo')){
+    public function update(Request $request)
+    {   
+        $request->validate([
+                'st_name'=>'required',
+                'st_class'=>'required',
+                'st_session'=>'required',
+                'st_roll_no'=>'required',
+            ],
+            [
+                'st_name.required'=>'The student name is required',
+                'st_class.required'=>'The student class is required',
+                'st_roll_no.required'=>'The student roll is required',
+                'st_session.required'=>'The student session is required',
+            ]
+        );
+
+        $update_id = $request->update_id;
+
+         if($request->file('st_photo')){
             $file = $request->st_photo;
             $file->getClientOriginalName();
             $setNumber = rand(9999, 99999999).time();
@@ -149,43 +171,26 @@ class StudentController extends Controller
         else{
             $has_photo = false;   
         }
-        
-        $request->validate([
-                'st_name'=>'required',
-                'st_f_name'=>'required',
-                'st_phone'=>'required|max:11',
-                'st_present_add'=>'required',
-                'st_religion'=>'required',
-                'st_class'=>'required',
-                'st_session'=>'required',
-                'st_roll_no'=>'required',
-            ],
-            [
-                'st_name.required'=>'The Name filed is required',
-                'st_f_name.required'=>'The Father Name filed is required',
-                'st_phone.required'=>'The Phone filed is required',
-                'st_phone.max'=>'The Phone must be 11 digit',
-                'st_present_add.required'=>'The Pressent Address filed is required',
-                'st_religion.required'=>'The Religion filed is required',
-                'st_class.required'=>'The Class filed is required',
-                'st_roll_no.required'=>'The Roll filed is required',
-                'st_session.required'=>'The Session filed is required',
-            ]
-        );
 
         $formData = $request->all();  
         if($has_photo == true){
             $formData = array_merge($formData,$photo_array);
         }
 
-        $Student = Student::find($id);
+
+
+
+        $Student = Student::find($update_id);
         $is_update = $Student->update($formData);
         if($is_update){
-            return redirect('student/create')->with('successMsg','Student Update Successfully');
+            return response()->json(['error'=>false,'iconMsg'=>'success','headingMsg'=>'Thank You!','successMsg'=>'Data Update Successfully']);
         }
         else{
-            return redirect('student/create')->with('errorMsg','Student Can\'t Update');
-        }        
+            return response()->json(['error'=>true,'iconMsg'=>'error','headingMsg'=>'Opps!','errorMsg'=>'Data Can\'t insert']);
+        }
+   
+
+
     }
 
     /**
@@ -196,22 +201,42 @@ class StudentController extends Controller
      */
     public function destroy($id)
     {
-        $student = Student::find($id);
-        if($student){
-            $is_delete = $student->delete();
+        if($id != null){
+            $is_delete = Student::where('id', $id)->delete();
             if($is_delete){
-                session()->flash('successMsg','Student Delete Successfully');
-                return redirect()->back();
-                die;
+                return response()->json(['error'=>false,'iconMsg'=>'success','successMsg'=>'Data Delete Successfully']);
             }
             else{
-                session()->flash('errorMsg','Student Can\'t Delete');
-                return redirect()->back();
+                 return response()->json(['error'=>true,'errorMsg' => 'Data Can\'t Delete']);
             }
-        }
-        else{
-            session()->flash('errorMsg','Invalid Student ID');
-            return redirect()->back();
+       
         }
     }
+
+
+
+    public function quickViewFilter(Request $request){
+        if($request->st_class != null){
+            if($request->st_section == null){
+                $class = $request->st_class;
+                $student = Student::where('st_class', $class)->get();
+                return response()->json(['errro'=>false, 'data'=>$student]);
+            }
+            else{
+                $class = $request->st_class;
+                $section = $request->st_section;
+                $student = Student::where('st_class', $class)->where('st_section',$section)->get();
+                return response()->json(['errro'=>false, 'data'=>$student]);
+            }
+        }
+        if($request->st_session != null){
+            $session = $request->st_session;
+            $student = Student::where('st_session', $session)->get();
+            return response()->json(['errro'=>false, 'data'=>$student]);
+        }
+    }
+
+
+
+    
 }

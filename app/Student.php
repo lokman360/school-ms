@@ -3,7 +3,8 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-
+use App\StudentClass;
+use App\Section;
 class Student extends Model
 {
     protected $fillable = [
@@ -24,4 +25,13 @@ class Student extends Model
     	'st_photo'
 
     ];
+
+    public function stClass(){
+        return $this->belongsTo(StudentClass::class,'st_class');
+    }
+    public function section(){
+        return $this->belongsTo(Section::class,'st_section');
+    }
+
+
 }
